@@ -1,0 +1,47 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+use IEEE.std_logic_arith.all;
+
+entity FPGA_Password_Cracker is
+	port (
+		clk_50 : in std_logic;
+		sw3, sw2, sw1, sw0, btn0 : in std_logic;
+		led0 : out std_logic);
+end FPGA_Password_Cracker;
+
+architecture Behavior of FPGA_Password_Cracker is
+	signal counter : std_logic_vector(25 downto 0);
+	signal guess	: std_logic_vector(3 downto 0);
+	signal enableLine  : boolean := false;
+	
+begin
+	
+	Prescaler: process (clk_50, btn0, enableLine)
+	begin
+		if btn0 = '0' then
+			enableLine <= false;
+		end if;
+		if clk_50'event and clk_50 = '1' and NOT enableLine then
+         if counter < "10111110101111000010000000" then
+            counter <= counter + 1;
+         else
+            guess <= guess + 1;
+            counter <= (others => '0');
+         end if;
+      end if;
+		if sw3 = guess(3) and sw2 = guess(2) and sw1 = guess(1) and sw0 = guess(0) and NOT enableLine then
+			enableLine <= true;
+		end if;
+   end process Prescaler;
+	
+	switch: process(sw3, sw2, sw1, sw0, enableLine)
+	begin
+		if sw3 = guess(3) and sw2 = guess(2) and sw1 = guess(1) and sw0 = guess(0) then
+			led0 <= '0';
+		else
+			led0 <= '1';
+		end if;
+	end process switch;
+
+end Behavior;
