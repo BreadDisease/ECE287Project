@@ -1,8 +1,11 @@
 # ECE287Project
 
 ECE 287 Project
+
 Password Cracker
+
 Team 7
+
 Aidan Quimby and Taylor Owens
 
 Our idea for the project is to make a password cracker. You would input the password via a USB keyboard, and the inputted password would be outputted to a display connected via VGA. The display would have a realtime guess count and timer.
